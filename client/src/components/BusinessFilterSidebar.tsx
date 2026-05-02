@@ -1,20 +1,11 @@
 import React from "react";
 import { cn } from "../lib/utils";
 
-const CATEGORIES = [
-  "Restaurant",
-  "Hotel",
-  "Shop",
-  "Cafe",
-  "Bar",
-  "Resort",
-  "Tour",
-  "Other",
-];
+const CATEGORIES = ["Restaurant", "Hotel", "Shop", "Cafe", "Bar", "Resort", "Tour", "Other"];
 
 const EXPENSES = [
   { label: "Budget", value: "cheap" },
-  { label: "Mid-Range", value: "moderate" },
+  { label: "Mid", value: "moderate" },
   { label: "Premium", value: "expensive" },
 ];
 
@@ -28,179 +19,95 @@ interface Props {
   filter: BusinessFilter;
   onChange: (filter: BusinessFilter) => void;
   isVisible?: boolean;
+  resultsCount?: number;
 }
 
-const BusinessFilterSidebar: React.FC<Props> = ({ filter, onChange, isVisible = true }) => {
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    onChange({ ...filter, [e.target.name]: e.target.value });
-  };
-
-  const handleClear = () => {
-    onChange({ search: "", category: "", expense: "" });
+const BusinessFilterSidebar: React.FC<Props> = ({ filter, onChange, isVisible = true, resultsCount = 0 }) => {
+  const setValue = (name: keyof BusinessFilter, value: string) => {
+    onChange({ ...filter, [name]: value });
   };
 
   if (!isVisible) return null;
 
   return (
-    <aside
-      className={cn(
-        "w-full md:w-[20rem] xl:w-[24rem] mb-8 md:mb-0 sticky top-8 transition-all duration-300",
-        "bg-gray-50 rounded-[24px] p-6",
-        "shadow-[inset_6px_6px_12px_rgba(163,163,163,0.2),inset_-6px_-6px_12px_rgba(255,255,255,0.8)]",
-        "border border-gray-200/50"
-      )}
-      style={{ minWidth: "0" }}
-    >
-      <div className="flex items-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 tracking-tight">
-          Filters
-        </h2>
+    <aside className="sticky top-24 w-full rounded-2xl border border-neutral-200 bg-white p-5 shadow-card">
+      <div className="mb-5">
+        <h2 className="text-lg font-bold text-neutral-900">Filter Results</h2>
+        <p className="mt-1 text-sm text-neutral-500">
+          Showing <strong className="text-neutral-800">{resultsCount}</strong> businesses
+        </p>
       </div>
-      
-      <div className="space-y-8">
-        {/* Search */}
+
+      <div className="space-y-6">
         <div>
-          <label
-            className="block text-gray-700 font-semibold mb-4 text-lg"
-            htmlFor="search"
-          >
+          <label className="mb-2 block text-sm font-semibold text-neutral-700" htmlFor="search">
             Search
           </label>
-          <input
-            id="search"
-            name="search"
-            type="text"
-            value={filter.search}
-            onChange={handleInputChange}
-            placeholder="Name or location..."
-            className={cn(
-              "w-full px-5 py-4 rounded-[16px] border-0 text-base",
-              "bg-gray-50 shadow-[inset_4px_4px_8px_rgba(163,163,163,0.2),inset_-4px_-4px_8px_rgba(255,255,255,0.8)]",
-              "focus:outline-none focus:shadow-[inset_6px_6px_12px_rgba(163,163,163,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.9)]",
-              "placeholder-gray-400 transition-all duration-200"
-            )}
-          />
+          <div className="relative">
+            <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35m1.1-5.15a6.25 6.25 0 11-12.5 0 6.25 6.25 0 0112.5 0z" />
+            </svg>
+            <input
+              id="search"
+              value={filter.search}
+              onChange={(event) => setValue("search", event.target.value)}
+              placeholder="Name or location..."
+              className="w-full rounded-xl border border-neutral-200 px-10 py-2.5 text-sm outline-none transition-all placeholder:text-neutral-400 focus:border-primary-400 focus:ring-2 focus:ring-primary-300"
+            />
+          </div>
         </div>
-        
-        {/* Category */}
+
         <div>
-          <label className="block text-gray-700 font-semibold mb-4 text-lg">
-            Category
-          </label>
-          <div className="space-y-3">
-            <label className="flex items-center cursor-pointer group py-2">
-              <div className={cn(
-                "relative w-6 h-6 rounded-full mr-4",
-                "bg-gray-50 shadow-[inset_2px_2px_4px_rgba(163,163,163,0.2),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]",
-                filter.category === "" && "shadow-[inset_4px_4px_8px_rgba(59,130,246,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.9)]"
-              )}>
-                <input
-                  type="radio"
-                  name="category"
-                  value=""
-                  checked={filter.category === ""}
-                  onChange={handleInputChange}
-                  className="absolute opacity-0 w-full h-full cursor-pointer"
-                />
-                {filter.category === "" && (
-                  <div className="absolute inset-1.5 bg-blue-500 rounded-full"></div>
-                )}
-              </div>
-              <span className="text-gray-700 text-base font-medium">All Categories</span>
-            </label>
-            {CATEGORIES.map((cat) => (
-              <label key={cat} className="flex items-center cursor-pointer group py-2">
-                <div className={cn(
-                  "relative w-6 h-6 rounded-full mr-4",
-                  "bg-gray-50 shadow-[inset_2px_2px_4px_rgba(163,163,163,0.2),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]",
-                  filter.category === cat && "shadow-[inset_4px_4px_8px_rgba(59,130,246,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.9)]"
-                )}>
-                  <input
-                    type="radio"
-                    name="category"
-                    value={cat}
-                    checked={filter.category === cat}
-                    onChange={handleInputChange}
-                    className="absolute opacity-0 w-full h-full cursor-pointer"
-                  />
-                  {filter.category === cat && (
-                    <div className="absolute inset-1.5 bg-blue-500 rounded-full"></div>
-                  )}
-                </div>
-                <span className="text-gray-700 text-base font-medium">{cat}</span>
-              </label>
+          <p className="mb-3 text-sm font-semibold text-neutral-700">Category</p>
+          <div className="flex flex-wrap gap-2">
+            <Pill selected={filter.category === ""} onClick={() => setValue("category", "")}>
+              All
+            </Pill>
+            {CATEGORIES.map((category) => (
+              <Pill key={category} selected={filter.category === category} onClick={() => setValue("category", category)}>
+                {category}
+              </Pill>
             ))}
           </div>
         </div>
-        
-        {/* Expense */}
+
         <div>
-          <label className="block text-gray-700 font-semibold mb-4 text-lg">
-            Price Range
-          </label>
-          <div className="space-y-3">
-            {EXPENSES.map((exp) => (
-              <label key={exp.value} className="flex items-center cursor-pointer group py-2">
-                <div className={cn(
-                  "relative w-6 h-6 rounded-full mr-4",
-                  "bg-gray-50 shadow-[inset_2px_2px_4px_rgba(163,163,163,0.2),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]",
-                  filter.expense === exp.value && "shadow-[inset_4px_4px_8px_rgba(59,130,246,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.9)]"
-                )}>
-                  <input
-                    type="radio"
-                    name="expense"
-                    value={exp.value}
-                    checked={filter.expense === exp.value}
-                    onChange={handleInputChange}
-                    className="absolute opacity-0 w-full h-full cursor-pointer"
-                  />
-                  {filter.expense === exp.value && (
-                    <div className="absolute inset-1.5 bg-blue-500 rounded-full"></div>
-                  )}
-                </div>
-                <span className="text-gray-700 text-base font-medium">{exp.label}</span>
-              </label>
+          <p className="mb-3 text-sm font-semibold text-neutral-700">Price tier</p>
+          <div className="flex flex-wrap gap-2">
+            <Pill selected={filter.expense === ""} onClick={() => setValue("expense", "")}>
+              All
+            </Pill>
+            {EXPENSES.map((expense) => (
+              <Pill key={expense.value} selected={filter.expense === expense.value} onClick={() => setValue("expense", expense.value)}>
+                {expense.label}
+              </Pill>
             ))}
-            <label className="flex items-center cursor-pointer group py-2">
-              <div className={cn(
-                "relative w-6 h-6 rounded-full mr-4",
-                "bg-gray-50 shadow-[inset_2px_2px_4px_rgba(163,163,163,0.2),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]",
-                filter.expense === "" && "shadow-[inset_4px_4px_8px_rgba(59,130,246,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.9)]"
-              )}>
-                <input
-                  type="radio"
-                  name="expense"
-                  value=""
-                  checked={filter.expense === ""}
-                  onChange={handleInputChange}
-                  className="absolute opacity-0 w-full h-full cursor-pointer"
-                />
-                {filter.expense === "" && (
-                  <div className="absolute inset-1.5 bg-blue-500 rounded-full"></div>
-                )}
-              </div>
-              <span className="text-gray-700 text-base font-medium">All</span>
-            </label>
           </div>
         </div>
       </div>
-      
+
       <button
-        onClick={handleClear}
-        className={cn(
-          "w-full mt-8 py-4 px-6 rounded-[16px] font-semibold text-base transition-all duration-200",
-          "bg-gray-50 text-gray-700",
-          "shadow-[4px_4px_8px_rgba(163,163,163,0.2),-4px_-4px_8px_rgba(255,255,255,0.8)]",
-          "hover:shadow-[6px_6px_12px_rgba(163,163,163,0.3),-6px_-6px_12px_rgba(255,255,255,0.9)]",
-          "active:shadow-[inset_4px_4px_8px_rgba(163,163,163,0.2),inset_-4px_-4px_8px_rgba(255,255,255,0.8)]"
-        )}
+        onClick={() => onChange({ search: "", category: "", expense: "" })}
+        className="mt-6 text-sm font-medium text-red-500 transition-colors hover:text-red-600"
       >
-        Clear Filters
+        Clear filters
       </button>
     </aside>
   );
 };
+
+const Pill = ({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) => (
+  <button
+    onClick={onClick}
+    className={cn(
+      "rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
+      selected
+        ? "border-primary-500 bg-primary-50 text-primary-700"
+        : "border-neutral-200 text-neutral-600 hover:border-primary-400 hover:bg-primary-50 hover:text-primary-600"
+    )}
+  >
+    {children}
+  </button>
+);
 
 export default BusinessFilterSidebar;

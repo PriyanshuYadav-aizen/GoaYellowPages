@@ -1,9 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import { NormalUserAuthProvider } from "./contexts/NormalUserAuthContext";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Navbar from "./components/Navbar";
 
 // Lazy load all pages for better performance
 const Home = lazy(() => import("./pages/Home"));
@@ -22,6 +23,13 @@ const BusinessAdminDashboard = lazy(
   () => import("./pages/BusinessAdminDashboard")
 );
 
+const PublicLayout = () => (
+  <>
+    <Navbar />
+    <Outlet />
+  </>
+);
+
 function App() {
   return (
     <AuthProvider>
@@ -31,18 +39,21 @@ function App() {
             <main>
               <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/about" element={<AboutUs />} />
-                  <Route path="/privacy" element={<PrivacyPolicy />} />
-                  <Route path="/terms" element={<TermsOfService />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/user/login" element={<NormalUserLogin />} />
-                  <Route
-                    path="/user/register"
-                    element={<NormalUserRegister />}
-                  />
+                  <Route element={<PublicLayout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/about" element={<AboutUs />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/terms" element={<TermsOfService />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/user/login" element={<NormalUserLogin />} />
+                    <Route
+                      path="/user/register"
+                      element={<NormalUserRegister />}
+                    />
+                    <Route path="/business/:id" element={<BusinessDetails />} />
+                  </Route>
                   <Route
                     path="/business/:id/edit"
                     element={
@@ -51,7 +62,6 @@ function App() {
                       </ProtectedRoute>
                     }
                   />
-                  <Route path="/business/:id" element={<BusinessDetails />} />
                   <Route
                     path="/dashboard"
                     element={

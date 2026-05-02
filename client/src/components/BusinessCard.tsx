@@ -1,193 +1,146 @@
+import { Link } from "react-router-dom";
 import { Business } from "../types";
 import { API_URL } from "../config";
-import { Link } from "react-router-dom";
 import { useNormalUserAuth } from "../contexts/NormalUserAuthContext";
 import { useAuth } from "../contexts/AuthContext";
-import {
-  MinimalCard,
-  MinimalCardImage,
-  MinimalCardTitle,
-  MinimalCardDescription,
-  MinimalCardContent,
-} from "./ui/minimal-card";
+import { cn } from "../lib/utils";
 
 interface BusinessCardProps {
   business: Business;
   hideContactCTA?: boolean;
 }
 
+const PriceBadge = ({ category }: { category: string }) => {
+  const map: Record<string, { label: string; className: string }> = {
+    cheap: { label: "₹ Budget", className: "bg-green-100 text-green-700 border-green-200" },
+    moderate: { label: "₹₹ Mid", className: "bg-amber-100 text-amber-700 border-amber-200" },
+    expensive: { label: "₹₹₹ Premium", className: "bg-rose-100 text-rose-700 border-rose-200" },
+  };
+  const item = map[category] || {
+    label: category || "Price",
+    className: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  };
+
+  return (
+    <span className={cn("rounded-full border px-2.5 py-1 text-xs font-semibold backdrop-blur-sm", item.className)}>
+      {item.label}
+    </span>
+  );
+};
+
+const StarIcon = ({ filled }: { filled: boolean }) => (
+  <svg className={cn("h-4 w-4", filled ? "text-accent-500" : "text-neutral-200")} fill="currentColor" viewBox="0 0 20 20">
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.966c.3.922-.755 1.688-1.54 1.118l-3.386-2.46a1 1 0 00-1.176 0l-3.386 2.46c-.784.57-1.838-.196-1.539-1.118l1.285-3.966a1 1 0 00-.364-1.118L2.045 9.394c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.967z" />
+  </svg>
+);
+
+const getImageUrl = (path: string | undefined): string => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${API_URL}${path}`;
+};
+
 const BusinessCard = ({ business, hideContactCTA = false }: BusinessCardProps) => {
-  const getPriceCategoryColor = (category: string) => {
-    switch (category) {
-      case "cheap":
-        return "bg-gradient-to-r from-green-400 to-emerald-500 text-white";
-      case "moderate":
-        return "bg-gradient-to-r from-yellow-400 to-orange-500 text-white";
-      case "expensive":
-        return "bg-gradient-to-r from-red-400 to-pink-500 text-white";
-      default:
-        return "bg-gradient-to-r from-gray-400 to-gray-500 text-white";
-    }
-  };
-
-  const getPriceCategoryLabel = (category: string) => {
-    switch (category) {
-      case "cheap":
-        return "💰 Budget";
-      case "moderate":
-        return "💸 Mid-Range";
-      case "expensive":
-        return "💎 Premium";
-      default:
-        return category;
-    }
-  };
-
-  const renderStars = (rating: number) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <span
-          key={i}
-          className={`text-lg ${
-            i <= rating ? "text-yellow-400" : "text-gray-300"
-          }`}
-        >
-          ★
-        </span>
-      );
-    }
-    return stars;
-  };
-
-  const getImageUrl = (path: string | undefined): string => {
-    if (!path) return "";
-    if (path.startsWith("http")) return path;
-    return `${API_URL}${path}`;
-  };
-
   const { isLoggedIn: isNormalUserLoggedIn } = useNormalUserAuth();
   const { isLoggedIn: isAdminLoggedIn } = useAuth();
   const canViewContact = isNormalUserLoggedIn || isAdminLoggedIn;
-
-  const statusLabel = business.isOpen ? "Open now" : "Closed now";
-  const statusContainerClasses = business.isOpen
-    ? "bg-emerald-50/80 text-emerald-700 border-emerald-200"
-    : "bg-rose-50/80 text-rose-700 border-rose-200";
-  const statusDotClasses = business.isOpen
-    ? "bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.15)]"
-    : "bg-rose-500 shadow-[0_0_0_3px_rgba(244,63,94,0.15)]";
+  const imageUrl = getImageUrl(business.heroImageUrl);
+  const isOpen = Boolean(business.isOpen);
 
   return (
-    <MinimalCard className="group relative transition-all duration-300 hover:shadow-2xl">
-      {business.heroImageUrl && (
-        <div className="relative">
-          <MinimalCardImage
-            src={getImageUrl(business.heroImageUrl)}
+    <article className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card-hover">
+      <div className="relative h-48 overflow-hidden bg-neutral-100">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
             alt={business.name}
-            className="mb-4"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          {/* Price Category Badge */}
-          <div className="absolute top-4 right-4">
-            <span
-              className={`px-2 py-1 rounded-full text-xs font-semibold shadow-lg ${getPriceCategoryColor(
-                business.priceCategory
-              )}`}
-            >
-              {getPriceCategoryLabel(business.priceCategory)}
-            </span>
-          </div>
-        </div>
-      )}
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-5xl">🏢</div>
+        )}
 
-      {/* Status badge - middle right of the card */}
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 z-10">
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-lg backdrop-blur-md ${statusContainerClasses}`}>
-          <span className={`w-2.5 h-2.5 rounded-full ${statusDotClasses} ${business.isOpen ? "animate-pulse" : ""}`}></span>
-          <span className="text-xs font-semibold tracking-wide">{statusLabel}</span>
+        <div className="absolute left-3 top-3">
+          <span className="rounded-full border border-neutral-200 bg-white/90 px-3 py-1 text-xs font-semibold text-neutral-700 backdrop-blur-sm">
+            {business.category || "Business"}
+          </span>
+        </div>
+
+        <div className="absolute right-3 top-3">
+          <PriceBadge category={business.priceCategory} />
+        </div>
+
+        <div
+          className={cn(
+            "absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold",
+            isOpen
+              ? "border-green-200 bg-green-50 text-green-700"
+              : "border-red-200 bg-red-50 text-red-700"
+          )}
+        >
+          <span className={cn("h-1.5 w-1.5 rounded-full", isOpen ? "animate-pulse bg-green-500" : "bg-red-500")} />
+          {isOpen ? "Open" : "Closed"}
         </div>
       </div>
 
-      <MinimalCardContent className="p-4 pt-0">
-        <MinimalCardTitle className="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors duration-200 px-0 mt-0">
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="line-clamp-1 mb-1 text-lg font-bold leading-snug text-neutral-900 transition-colors group-hover:text-primary-600">
           {business.name}
-        </MinimalCardTitle>
+        </h3>
 
-        <MinimalCardDescription className="text-gray-600 mb-2 flex items-center text-sm px-0 pb-0">
-          <svg
-            className="w-4 h-4 mr-2 text-blue-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-              clipRule="evenodd"
-            />
+        <p className="mb-3 flex items-center gap-1.5 text-sm text-neutral-500">
+          <svg className="h-3.5 w-3.5 flex-shrink-0 text-neutral-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
           </svg>
-          {business.location}
-        </MinimalCardDescription>
+          <span className="line-clamp-1">{business.location}</span>
+        </p>
 
-        {/* Ratings */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center">
-            <div className="flex mr-2">
-              {renderStars(business.averageRating || 0)}
-            </div>
-            <div className="text-sm">
-              <span className="font-semibold text-gray-900">
-                {business.averageRating
-                  ? business.averageRating.toFixed(1)
-                  : "0.0"}
-              </span>
-              <span className="text-gray-500 ml-1">
-                ({business.totalRatings || 0} reviews)
-              </span>
-            </div>
+        <div className="mb-4 flex items-center gap-2">
+          <div className="flex">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <StarIcon key={i} filled={i <= Math.round(business.averageRating || 0)} />
+            ))}
           </div>
+          <span className="text-sm font-semibold text-neutral-800">
+            {business.averageRating?.toFixed(1) || "0.0"}
+          </span>
+          <span className="text-sm text-neutral-400">({business.totalRatings || 0} reviews)</span>
         </div>
 
-        {/* Contact / CTA */}
-        {!hideContactCTA && (
-          <div className="pt-3 border-t border-gray-100 mb-3">
-            {canViewContact ? (
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-600 flex items-center">
-                  <svg
-                    className="w-4 h-4 mr-2 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                  {business.phone}
-                </p>
-              </div>
-            ) : (
-              <div className="flex gap-2">
-                <Link to="/user/login" className="btn-secondary w-1/2 text-center">User Login</Link>
-                <Link to="/user/register" className="btn-primary w-1/2 text-center">User Register</Link>
-              </div>
-            )}
-          </div>
-        )}
+        <div className="flex-1" />
 
-        {/* Action Button */}
-        <div>
-          <Link to={`/business/${business.id}`}>
-            <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-xl font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl">
-              View Details
-            </button>
+        <div className="flex gap-2 border-t border-neutral-100 pt-3">
+          {!hideContactCTA &&
+            (canViewContact ? (
+              <a
+                href={`tel:${business.phone}`}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-neutral-200 py-2.5 text-sm font-medium text-neutral-700 transition-all hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.68l1.5 4.5a1 1 0 01-.5 1.21l-2.26 1.13a11.04 11.04 0 005.52 5.52l1.13-2.26a1 1 0 011.21-.5l4.5 1.5a1 1 0 01.68.95V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z" />
+                </svg>
+                Call
+              </a>
+            ) : (
+              <Link
+                to="/user/login"
+                className="flex-1 rounded-xl border border-neutral-200 py-2.5 text-center text-sm font-medium text-neutral-600 transition-all hover:border-primary-300 hover:text-primary-600"
+              >
+                Login to Call
+              </Link>
+            ))}
+          <Link
+            to={`/business/${business.id}`}
+            className={cn(
+              "rounded-xl bg-primary-500 py-2.5 text-center text-sm font-semibold text-white transition-all hover:bg-primary-600 hover:shadow-button",
+              hideContactCTA ? "w-full" : "flex-1"
+            )}
+          >
+            View Details
           </Link>
         </div>
-      </MinimalCardContent>
-    </MinimalCard>
+      </div>
+    </article>
   );
 };
 

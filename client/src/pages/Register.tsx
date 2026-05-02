@@ -130,11 +130,11 @@ const Register = () => {
   // Show loading while checking for existing users
   if (checkingUsers) {
     return (
-      <div className="max-w-md mx-auto">
-        <div className="card">
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-neutral-50 px-4">
+        <div className="card p-8">
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-3 text-gray-600">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary-100 border-t-primary-500"></div>
+            <span className="ml-3 text-neutral-600">
               Checking system status...
             </span>
           </div>
@@ -146,10 +146,10 @@ const Register = () => {
   // Show message if users already exist
   if (usersExist) {
     return (
-      <div className="max-w-md mx-auto">
-        <div className="card">
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-neutral-50 px-4">
+        <div className="card max-w-md p-8">
           <div className="text-center py-8">
-            <div className="text-gray-400 mb-4">
+            <div className="text-neutral-400 mb-4">
               <svg
                 className="mx-auto h-16 w-16"
                 fill="none"
@@ -164,10 +164,10 @@ const Register = () => {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="mb-4 font-display text-2xl font-bold text-neutral-900">
               Registration Closed
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-neutral-600 mb-6">
                The system already has users registered.
             </p>
             <Link to="/login" className="btn-primary inline-block">
@@ -180,14 +180,27 @@ const Register = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="card">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
-          Create Super Admin Account
-        </h2>
+    <div className="grid min-h-[calc(100vh-4rem)] bg-white md:grid-cols-2">
+      <div className="hidden flex-col justify-center bg-gradient-to-br from-primary-500 to-secondary-600 p-16 text-white md:flex">
+        <div className="mb-2 font-borel text-4xl">Goa Yellow Pages</div>
+        <p className="mb-12 text-lg text-white/85">Set up the directory with a trusted admin account.</p>
+        <div className="grid gap-4">
+          {["Secure admin access", "Verified listing control", "Community trust tools"].map((item) => (
+            <div key={item} className="flex items-center gap-3">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">✓</span>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
 
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-blue-800 text-sm">
+      <div className="flex items-center justify-center bg-white p-8">
+      <div className="w-full max-w-sm">
+        <h2 className="mb-2 font-display text-2xl font-bold text-neutral-900">Create super admin</h2>
+        <p className="mb-8 text-sm text-neutral-500">First user setup for Goa Yellow Pages.</p>
+
+        <div className="mb-6 rounded-xl border border-primary-200 bg-primary-50 p-4">
+          <p className="text-sm text-primary-800">
             <strong>First User Setup:</strong> You are creating the first user
             account. This user will have Super Admin privileges and full system
             access.
@@ -195,13 +208,13 @@ const Register = () => {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3">
             <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
         {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-4 rounded-xl border border-green-200 bg-green-50 p-3">
             <p className="text-green-600 text-sm">{success}</p>
           </div>
         )}
@@ -210,7 +223,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="mb-2 block text-sm font-semibold text-neutral-700"
             >
               Full Name
             </label>
@@ -221,7 +234,7 @@ const Register = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field py-3"
               placeholder="Enter your full name"
               disabled={loading}
             />
@@ -230,7 +243,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="mb-2 block text-sm font-semibold text-neutral-700"
             >
               Email Address
             </label>
@@ -241,7 +254,7 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field py-3"
               placeholder="Enter your email"
               disabled={loading}
             />
@@ -250,7 +263,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="mb-2 block text-sm font-semibold text-neutral-700"
             >
               Password
             </label>
@@ -261,7 +274,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field py-3"
               placeholder="Enter your password (min 6 characters)"
               disabled={loading}
             />
@@ -270,7 +283,7 @@ const Register = () => {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="mb-2 block text-sm font-semibold text-neutral-700"
             >
               Confirm Password
             </label>
@@ -281,7 +294,7 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="input-field"
+              className="input-field py-3"
               placeholder="Confirm your password"
               disabled={loading}
             />
@@ -289,9 +302,9 @@ const Register = () => {
 
           <button
             type="submit"
-            className={`w-full py-3 font-medium rounded-lg transition-colors duration-200 ${
+            className={`w-full rounded-xl py-3 text-sm font-semibold transition-all ${
               loading
-                ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                ? "bg-neutral-300 text-neutral-500 cursor-not-allowed"
                 : "btn-primary"
             }`}
             disabled={loading}
@@ -303,16 +316,17 @@ const Register = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600">
+          <p className="text-sm text-neutral-600">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-primary-600 hover:text-primary-700 font-medium"
+              className="font-semibold text-primary-600 hover:text-primary-700"
             >
               Login here
             </Link>
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

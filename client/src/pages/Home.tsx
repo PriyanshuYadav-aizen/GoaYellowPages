@@ -6,9 +6,9 @@ import BusinessFilterSidebar, {
 } from "../components/BusinessFilterSidebar";
 import HeroSection from "../components/HeroSection";
 import BusinessGrid from "../components/BusinessGrid";
-import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorDisplay from "../components/ErrorDisplay";
 import Footer from "../components/Footer";
+import CategoryStrip from "../components/CategoryStrip";
 import { cn } from "../lib/utils";
 
 // Add the paginated interface
@@ -115,34 +115,35 @@ const Home = () => {
     !filter.category &&
     !filter.expense;
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
   if (error) {
     return <ErrorDisplay error={error} />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Hero Section */}
-      <HeroSection />
+    <div className="min-h-screen bg-neutral-50">
+      <HeroSection
+        search={filter.search}
+        onSearchChange={(search) => setFilter((current) => ({ ...current, search }))}
+        onCategorySelect={(category) => setFilter((current) => ({ ...current, category }))}
+      />
+      <CategoryStrip
+        selected={filter.category}
+        onCategorySelect={(category) => setFilter((current) => ({ ...current, category }))}
+      />
 
-      {/* Filter & Content Section */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filter Toggle Button */}
-        <div className="mb-6">
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="font-display text-3xl font-bold text-neutral-900">Explore Businesses</h2>
+            <p className="mt-1 text-sm text-neutral-500">Find trusted places, services, and experiences across Goa.</p>
+          </div>
           <button
             onClick={() => {
               setIsFilterVisible(!isFilterVisible);
               setCurrentPage(1);
             }}
             className={cn(
-              "flex items-center gap-3 px-6 py-3 rounded-[16px] font-medium text-sm transition-all duration-200",
-              "bg-gray-50 text-gray-700",
-              "shadow-[4px_4px_8px_rgba(163,163,163,0.2),-4px_-4px_8px_rgba(255,255,255,0.8)]",
-              "hover:shadow-[6px_6px_12px_rgba(163,163,163,0.3),-6px_-6px_12px_rgba(255,255,255,0.9)]",
-              "active:shadow-[inset_4px_4px_8px_rgba(163,163,163,0.2),inset_-4px_-4px_8px_rgba(255,255,255,0.8)]"
+              "flex min-h-[44px] items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-700 shadow-sm transition-all hover:border-primary-300 hover:text-primary-600"
             )}
           >
             <svg
@@ -166,45 +167,51 @@ const Home = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-6 items-start">
-          {/* Sidebar */}
           {isFilterVisible && (
-            <div className="w-full md:w-[20rem] xl:w-[24rem] flex-shrink-0">
+            <div className="w-full flex-shrink-0 md:w-[20rem] xl:w-[22rem]">
               <BusinessFilterSidebar
                 filter={filter}
                 onChange={setFilter}
                 isVisible={isFilterVisible}
+                resultsCount={filteredBusinesses.length}
               />
             </div>
           )}
-          {/* Main Content */}
           <div className="flex-1 min-w-0 w-full">
-            {/* Businesses Section (hide contact/login CTA on home cards) */}
-            <BusinessGrid
-              data={{
-                businesses: filteredBusinesses,
-                totalPages: shouldShowPagination
-                  ? businessesData?.totalPages || 0
-                  : 1,
-                currentPage: shouldShowPagination ? currentPage : 1,
-                totalBusinesses: shouldShowPagination
-                  ? businessesData?.totalBusinesses || 0
-                  : filteredBusinesses.length,
-                hasNextPage: shouldShowPagination
-                  ? businessesData?.hasNextPage || false
-                  : false,
-                hasPrevPage: shouldShowPagination
-                  ? businessesData?.hasPrevPage || false
-                  : false,
-              }}
-              onPageChange={handlePageChange}
-              hideContactCTA
-              isFilterVisible={isFilterVisible}
-            />
+            {loading ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }, (_, index) => (
+                  <div key={index} className="animate-pulse overflow-hidden rounded-2xl bg-white shadow-card">
+                    <div className="h-48 bg-neutral-200" />
+                    <div className="space-y-4 p-5">
+                      <div className="h-5 w-3/4 rounded bg-neutral-200" />
+                      <div className="h-4 w-1/2 rounded bg-neutral-200" />
+                      <div className="h-10 rounded-xl bg-neutral-200" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <BusinessGrid
+                data={{
+                  businesses: filteredBusinesses,
+                  totalPages: shouldShowPagination ? businessesData?.totalPages || 0 : 1,
+                  currentPage: shouldShowPagination ? currentPage : 1,
+                  totalBusinesses: shouldShowPagination
+                    ? businessesData?.totalBusinesses || 0
+                    : filteredBusinesses.length,
+                  hasNextPage: shouldShowPagination ? businessesData?.hasNextPage || false : false,
+                  hasPrevPage: shouldShowPagination ? businessesData?.hasPrevPage || false : false,
+                }}
+                onPageChange={handlePageChange}
+                hideContactCTA
+                isFilterVisible={isFilterVisible}
+              />
+            )}
           </div>
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

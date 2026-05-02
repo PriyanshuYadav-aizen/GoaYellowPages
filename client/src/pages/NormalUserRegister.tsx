@@ -36,45 +36,58 @@ const NormalUserRegister = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="card">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">Create Account</h2>
+    <div className="grid min-h-[calc(100vh-4rem)] bg-white md:grid-cols-2">
+      <div className="hidden flex-col justify-center bg-gradient-to-br from-primary-500 to-secondary-600 p-16 text-white md:flex">
+        <div className="mb-2 font-borel text-4xl">Goa Yellow Pages</div>
+        <p className="mb-12 text-lg text-white/85">Join Goa's business community.</p>
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div><div className="text-3xl font-bold">500+</div><div className="text-sm text-white/75">Listings</div></div>
+          <div><div className="text-3xl font-bold">4.5★</div><div className="text-sm text-white/75">Average</div></div>
+          <div><div className="text-3xl font-bold">10K+</div><div className="text-sm text-white/75">Visitors</div></div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center bg-white p-8">
+      <div className="w-full max-w-sm">
+        <h2 className="mb-2 font-display text-2xl font-bold text-neutral-900">Create your account</h2>
+        <p className="mb-8 text-sm text-neutral-500">Save time when contacting Goa businesses.</p>
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3">
             <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
         {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-4 rounded-xl border border-green-200 bg-green-50 p-3">
             <p className="text-green-600 text-sm">{success}</p>
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-            <input id="name" name="name" type="text" className="input-field" value={form.name} onChange={handleChange} required disabled={loading} />
+            <label htmlFor="name" className="mb-2 block text-sm font-semibold text-neutral-700">Full Name</label>
+            <input id="name" name="name" type="text" className="input-field py-3" value={form.name} onChange={handleChange} required disabled={loading} />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-            <input id="email" name="email" type="email" className="input-field" value={form.email} onChange={handleChange} required disabled={loading} />
+            <label htmlFor="email" className="mb-2 block text-sm font-semibold text-neutral-700">Email</label>
+            <input id="email" name="email" type="email" className="input-field py-3" value={form.email} onChange={handleChange} required disabled={loading} />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-            <input id="password" name="password" type="password" className="input-field" value={form.password} onChange={handleChange} required disabled={loading} />
+            <label htmlFor="password" className="mb-2 block text-sm font-semibold text-neutral-700">Password</label>
+            <input id="password" name="password" type="password" className="input-field py-3" value={form.password} onChange={handleChange} required disabled={loading} />
           </div>
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-            <input id="confirmPassword" name="confirmPassword" type="password" className="input-field" value={form.confirmPassword} onChange={handleChange} required disabled={loading} />
+            <label htmlFor="confirmPassword" className="mb-2 block text-sm font-semibold text-neutral-700">Confirm Password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" className="input-field py-3" value={form.confirmPassword} onChange={handleChange} required disabled={loading} />
           </div>
-          <button type="submit" className={`w-full py-3 font-medium rounded-lg transition-colors duration-200 ${loading ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "btn-primary"}`} disabled={loading}>
+          <button type="submit" className={`w-full rounded-xl py-3 text-sm font-semibold transition-all ${loading ? "bg-neutral-300 text-neutral-500 cursor-not-allowed" : "btn-primary"}`} disabled={loading}>
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
         <div className="mt-6 text-center">
-          <p className="text-gray-600">
-            Already have an account? <Link to="/user/login" className="text-primary-600 hover:text-primary-700 font-medium">Login</Link>
+          <p className="text-sm text-neutral-600">
+            Already have an account? <Link to="/user/login" className="font-semibold text-primary-600 hover:text-primary-700">Login</Link>
           </p>
         </div>
+      </div>
       </div>
     </div>
   );
