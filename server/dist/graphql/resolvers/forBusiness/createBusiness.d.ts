@@ -1,12 +1,22 @@
-export declare const createBusiness: (_: any, { name, location, priceCategory, contactInfo, googleMapsUrl, heroImageUrl, galleryImages, description, }: {
+export declare const createBusiness: (_: any, { name, location, category, priceCategory, phone, email, latitude, longitude, heroImage, galleryImages, description, faq, isOpen, openingTime, closingTime, }: {
     name: string;
     location: string;
+    category: string;
     priceCategory: string;
-    contactInfo: string;
-    googleMapsUrl: string;
-    heroImageUrl?: string;
+    phone: string;
+    email: string;
+    latitude: number;
+    longitude: number;
+    heroImage?: string;
     galleryImages?: string[];
     description: string;
-}) => Promise<import("mongoose").Document<unknown, {}, import("../../../models/Business").IBusiness> & import("../../../models/Business").IBusiness & {
+    faq?: Array<{
+        question: string;
+        answer: string;
+    }>;
+    isOpen?: boolean;
+    openingTime?: string;
+    closingTime?: string;
+}) => Promise<import("mongoose").Document<unknown, {}, import("../../../models/Business.js").IBusiness> & import("../../../models/Business.js").IBusiness & {
     _id: import("mongoose").Types.ObjectId;
 }>;

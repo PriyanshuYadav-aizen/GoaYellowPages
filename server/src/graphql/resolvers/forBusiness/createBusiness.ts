@@ -1,5 +1,5 @@
-import Business from "../../../models/Business";
-import cloudinary from "../../../config/cloudinary";
+import Business from "../../../models/Business.js";
+import cloudinary from "../../../config/cloudinary.js";
 
 export const createBusiness = async (
   _: any,

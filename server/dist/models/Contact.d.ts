@@ -4,6 +4,8 @@ export interface IContact extends Document {
     email: string;
     phone: string;
     address: string;
+    latitude?: number;
+    longitude?: number;
     googleMapsUrl: string;
     website: string;
     description: string;

@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.contactResolvers = void 0;
-const queries_1 = require("./queries");
-const createContact_1 = require("./createContact");
-const updateContact_1 = require("./updateContact");
-const deleteContact_1 = require("./deleteContact");
+const queries_js_1 = require("./queries.js");
+const createContact_js_1 = require("./createContact.js");
+const updateContact_js_1 = require("./updateContact.js");
+const deleteContact_js_1 = require("./deleteContact.js");
 exports.contactResolvers = {
     Query: {
-        getContacts: queries_1.getContacts,
-        getContact: queries_1.getContact,
+        getContacts: queries_js_1.getContacts,
+        getContact: queries_js_1.getContact,
     },
     Mutation: {
-        createContact: createContact_1.createContact,
-        updateContact: updateContact_1.updateContact,
-        deleteContact: deleteContact_1.deleteContact,
+        createContact: createContact_js_1.createContact,
+        updateContact: updateContact_js_1.updateContact,
+        deleteContact: deleteContact_js_1.deleteContact,
     },
 };
 exports.default = exports.contactResolvers;

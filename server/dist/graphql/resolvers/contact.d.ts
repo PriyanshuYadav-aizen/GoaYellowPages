@@ -1,2 +1,2 @@
-import contactResolvers from "./forContact/index";
+import contactResolvers from "./forContact/index.js";
 export default contactResolvers;

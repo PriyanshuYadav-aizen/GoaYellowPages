@@ -1,7 +1,7 @@
-import userResolvers from "./resolvers/user";
-import businessResolvers from "./resolvers/business";
-import contactResolvers from "./resolvers/contact";
-import normalUserResolvers from "./resolvers/normalUser";
+import userResolvers from "./resolvers/user.js";
+import businessResolvers from "./resolvers/business.js";
+import contactResolvers from "./resolvers/contact.js";
+import normalUserResolvers from "./resolvers/normalUser.js";
 
 const resolvers = {
   Query: {

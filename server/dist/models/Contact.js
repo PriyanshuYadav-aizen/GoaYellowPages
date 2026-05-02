@@ -39,6 +39,8 @@ const contactSchema = new mongoose_1.Schema({
     email: { type: String, required: true },
     phone: { type: String, required: true },
     address: { type: String, required: true },
+    latitude: { type: Number, required: false },
+    longitude: { type: Number, required: false },
     googleMapsUrl: { type: String, required: true },
     website: { type: String, required: true },
     description: { type: String, required: true },

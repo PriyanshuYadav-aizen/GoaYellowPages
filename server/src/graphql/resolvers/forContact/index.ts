@@ -1,8 +1,8 @@
 // Import all contact operations
-import { getContacts, getContact } from "./queries";
-import { createContact } from "./createContact";
-import { updateContact } from "./updateContact";
-import { deleteContact } from "./deleteContact";
+import { getContacts, getContact } from "./queries.js";
+import { createContact } from "./createContact.js";
+import { updateContact } from "./updateContact.js";
+import { deleteContact } from "./deleteContact.js";
 
 // Export all contact resolvers
 export const contactResolvers = {

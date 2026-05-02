@@ -1,5 +1,5 @@
 console.log("Loaded forBusiness/queries.ts");
-import Business from "../../../models/Business";
+import Business from "../../../models/Business.js";
 // Redis caching removed
 
 export const getBusinesses = async (

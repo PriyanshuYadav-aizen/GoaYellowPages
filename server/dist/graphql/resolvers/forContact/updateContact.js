@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateContact = void 0;
-const Contact_1 = __importDefault(require("../../../models/Contact"));
-const updateContact = async (_, { id, name, email, phone, address, googleMapsUrl, website, description, businessHours, socialMedia, }) => {
+const Contact_js_1 = __importDefault(require("../../../models/Contact.js"));
+const updateContact = async (_, { id, name, email, phone, address, latitude, longitude, googleMapsUrl, website, description, businessHours, socialMedia, }) => {
     try {
-        const contact = await Contact_1.default.findById(id);
+        const contact = await Contact_js_1.default.findById(id);
         if (!contact) {
             throw new Error("Contact not found");
         }
@@ -17,11 +17,11 @@ const updateContact = async (_, { id, name, email, phone, address, googleMapsUrl
                 throw new Error("Invalid email format");
             }
         }
-        if (googleMapsUrl) {
-            if (!googleMapsUrl.includes("maps.google.com") &&
-                !googleMapsUrl.includes("goo.gl/maps")) {
-                throw new Error("Invalid Google Maps URL");
-            }
+        if (latitude !== undefined && (latitude < -90 || latitude > 90)) {
+            throw new Error("Latitude must be between -90 and 90");
+        }
+        if (longitude !== undefined && (longitude < -180 || longitude > 180)) {
+            throw new Error("Longitude must be between -180 and 180");
         }
         if (name)
             contact.name = name;
@@ -31,6 +31,10 @@ const updateContact = async (_, { id, name, email, phone, address, googleMapsUrl
             contact.phone = phone;
         if (address)
             contact.address = address;
+        if (latitude !== undefined)
+            contact.latitude = latitude;
+        if (longitude !== undefined)
+            contact.longitude = longitude;
         if (googleMapsUrl)
             contact.googleMapsUrl = googleMapsUrl;
         if (website)

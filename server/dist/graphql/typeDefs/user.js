@@ -8,6 +8,7 @@ exports.userTypeDefs = (0, apollo_server_express_1.gql) `
     name: String!
     email: String!
     role: String!
+    businessId: String
   }
 
   extend type Query {
@@ -22,6 +23,14 @@ exports.userTypeDefs = (0, apollo_server_express_1.gql) `
       role: String
     ): User
     login(email: String!, password: String!): String
+    createAdmin(
+      name: String!
+      email: String!
+      password: String!
+      businessId: String
+    ): User
+    updateUser(id: ID!, name: String, email: String, businessId: String): User
+    deleteUser(id: ID!): Boolean
   }
 `;
 //# sourceMappingURL=user.js.map

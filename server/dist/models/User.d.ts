@@ -4,6 +4,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     role: "superadmin" | "admin";
+    businessId?: string;
 }
 declare const User: Model<IUser>;
 export default User;

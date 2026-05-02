@@ -3,6 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.businessTypeDefs = void 0;
 const apollo_server_express_1 = require("apollo-server-express");
 exports.businessTypeDefs = (0, apollo_server_express_1.gql) `
+  type FAQ {
+    question: String!
+    answer: String!
+  }
+
   type Rating {
     userId: String!
     rating: Int!
@@ -14,21 +19,38 @@ exports.businessTypeDefs = (0, apollo_server_express_1.gql) `
     id: ID!
     name: String!
     location: String!
+    category: String
     priceCategory: String!
-    contactInfo: String!
-    googleMapsUrl: String!
+    phone: String!
+    email: String!
+    latitude: Float!
+    longitude: Float!
     heroImageUrl: String
     galleryImages: [String!]!
     description: String!
+    faq: [FAQ!]!
     ratings: [Rating!]!
     averageRating: Float
     totalRatings: Int
+    isOpen: Boolean
+    openingTime: String
+    closingTime: String
+    publicViews: Int
     createdAt: String!
     updatedAt: String!
   }
 
+  type PaginatedBusinesses {
+    businesses: [Business]!
+    totalPages: Int!
+    currentPage: Int!
+    totalBusinesses: Int!
+    hasNextPage: Boolean!
+    hasPrevPage: Boolean!
+  }
+
   extend type Query {
-    getBusinesses: [Business]
+    getBusinesses(page: Int = 1, limit: Int = 9): PaginatedBusinesses
     getBusiness(id: ID!): Business
   }
 
@@ -36,25 +58,47 @@ exports.businessTypeDefs = (0, apollo_server_express_1.gql) `
     createBusiness(
       name: String!
       location: String!
+      category: String
       priceCategory: String!
-      contactInfo: String!
-      googleMapsUrl: String!
-      heroImageUrl: String
+      phone: String!
+      email: String!
+      latitude: Float!
+      longitude: Float!
+      heroImage: String
       galleryImages: [String!]
       description: String!
+      faq: [FAQInput!]
+      isOpen: Boolean
+      openingTime: String
+      closingTime: String
     ): Business
     updateBusiness(
       id: ID!
       name: String
       location: String
+      category: String
       priceCategory: String
-      contactInfo: String
-      googleMapsUrl: String
-      heroImageUrl: String
+      phone: String
+      email: String
+      latitude: Float
+      longitude: Float
+      heroImage: String
       galleryImages: [String!]
       description: String
+      faq: [FAQInput!]
+      isOpen: Boolean
+      openingTime: String
+      closingTime: String
     ): Business
     deleteBusiness(id: ID!): Boolean
+    addFAQ(businessId: ID!, question: String!, answer: String!): Business
+    updateFAQ(
+      businessId: ID!
+      faqIndex: Int!
+      question: String!
+      answer: String!
+    ): Business
+    deleteFAQ(businessId: ID!, faqIndex: Int!): Business
     addRating(
       businessId: ID!
       userId: String!
@@ -68,6 +112,12 @@ exports.businessTypeDefs = (0, apollo_server_express_1.gql) `
       comment: String
     ): Business
     deleteRating(businessId: ID!, userId: String!): Business
+    incrementPublicView(businessId: ID!, date: String): Business
+  }
+
+  input FAQInput {
+    question: String!
+    answer: String!
   }
 `;
 //# sourceMappingURL=business.js.map

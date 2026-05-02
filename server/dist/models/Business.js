@@ -37,16 +37,27 @@ const mongoose_1 = __importStar(require("mongoose"));
 const businessSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     location: { type: String, required: true },
+    category: { type: String, required: false },
     priceCategory: {
         type: String,
         enum: ["cheap", "moderate", "expensive"],
         required: true,
     },
-    contactInfo: { type: String, required: true },
-    googleMapsUrl: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
     heroImageUrl: { type: String, required: false },
+    heroImagePublicId: { type: String, required: false },
     galleryImages: [{ type: String }],
+    galleryImagePublicIds: [{ type: String }],
     description: { type: String, required: true },
+    faq: [
+        {
+            question: { type: String, required: true },
+            answer: { type: String, required: true },
+        },
+    ],
     ratings: [
         {
             userId: { type: String, required: true },
@@ -55,6 +66,11 @@ const businessSchema = new mongoose_1.Schema({
             createdAt: { type: Date, default: Date.now },
         },
     ],
+    isOpen: { type: Boolean, default: false },
+    openingTime: { type: String, required: false },
+    closingTime: { type: String, required: false },
+    publicViews: { type: Number, default: 0 },
+    publicViewsByDate: { type: Map, of: Number, default: {} },
 }, { timestamps: true });
 exports.default = mongoose_1.default.model("Business", businessSchema);
 //# sourceMappingURL=Business.js.map

@@ -1,4 +1,4 @@
-import Business from "../../../models/Business";
+import Business from "../../../models/Business.js";
 
 export const incrementPublicView = async (
   _: any,

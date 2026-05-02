@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getContact = exports.getContacts = void 0;
-const Contact_1 = __importDefault(require("../../../models/Contact"));
+const Contact_js_1 = __importDefault(require("../../../models/Contact.js"));
 const getContacts = async () => {
     try {
-        const contacts = await Contact_1.default.find().sort({ createdAt: -1 });
+        const contacts = await Contact_js_1.default.find().sort({ createdAt: -1 });
         return contacts;
     }
     catch (error) {
@@ -18,7 +18,7 @@ const getContacts = async () => {
 exports.getContacts = getContacts;
 const getContact = async (_, { id }) => {
     try {
-        const contact = await Contact_1.default.findById(id);
+        const contact = await Contact_js_1.default.findById(id);
         if (!contact) {
             throw new Error("Contact not found");
         }

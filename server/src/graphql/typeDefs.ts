@@ -1,8 +1,8 @@
 import { gql } from "apollo-server-express";
-import { userTypeDefs } from "./typeDefs/user";
-import { businessTypeDefs } from "./typeDefs/business";
-import { contactTypeDefs } from "./typeDefs/contact";
-import { normalUserTypeDefs } from "./typeDefs/normalUser";
+import { userTypeDefs } from "./typeDefs/user.js";
+import { businessTypeDefs } from "./typeDefs/business.js";
+import { contactTypeDefs } from "./typeDefs/contact.js";
+import { normalUserTypeDefs } from "./typeDefs/normalUser.js";
 
 const rootTypeDefs = gql`
   type Query

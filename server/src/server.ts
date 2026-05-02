@@ -7,12 +7,12 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import path from "path";
 import fs from "fs";
-import connectDB from "./config/database";
-import { generalLimiter } from "./middleware/rateLimiter";
+import connectDB from "./config/database.js";
+import { generalLimiter } from "./middleware/rateLimiter.js";
 
 import { ApolloServer } from "apollo-server-express";
-import typeDefs from "./graphql/typeDefs";
-import resolvers from "./graphql/resolvers";
+import typeDefs from "./graphql/typeDefs.js";
+import resolvers from "./graphql/resolvers.js";
 
 const app = express();
 const PORT: number = parseInt(process.env.PORT || "5001", 10);
@@ -53,7 +53,7 @@ const startApolloServer = async () => {
 
   await server.start();
 
-  // ✅ Fix: Use any type to bypass the Express type conflict
+  // âœ… Fix: Use any type to bypass the Express type conflict
   server.applyMiddleware({ app: app as any, path: "/graphql" });
 
   // Serve static files from the React app build directory AFTER API routes
@@ -61,31 +61,31 @@ const startApolloServer = async () => {
   app.use(express.static(clientBuildPath));
 
   // Debug: Check if client build exists
-  console.log(`🔍 Checking client build path: ${clientBuildPath}`);
+  console.log(`ðŸ” Checking client build path: ${clientBuildPath}`);
   if (fs.existsSync(clientBuildPath)) {
-    console.log(`✅ Client build directory exists`);
+    console.log(`âœ… Client build directory exists`);
     const files = fs.readdirSync(clientBuildPath);
-    console.log(`📁 Files in client build:`, files);
+    console.log(`ðŸ“ Files in client build:`, files);
 
     const indexPath = path.join(clientBuildPath, "index.html");
     if (fs.existsSync(indexPath)) {
-      console.log(`✅ index.html exists at: ${indexPath}`);
+      console.log(`âœ… index.html exists at: ${indexPath}`);
     } else {
-      console.log(`❌ index.html NOT found at: ${indexPath}`);
+      console.log(`âŒ index.html NOT found at: ${indexPath}`);
     }
   } else {
-    console.log(`❌ Client build directory does NOT exist`);
+    console.log(`âŒ Client build directory does NOT exist`);
   }
 
   // Catch-all handler: send back React's index.html file for any non-API routes
   // This MUST be defined AFTER static files but BEFORE starting the server
   app.get("*", (req: Request, res: Response) => {
-    console.log(`🌐 Catch-all route triggered for: ${req.path}`);
+    console.log(`ðŸŒ Catch-all route triggered for: ${req.path}`);
 
     // Skip API routes (shouldn't reach here, but just in case)
     if (req.path.startsWith("/api") || req.path.startsWith("/graphql")) {
       console.log(
-        `❌ API route ${req.path} reached catch-all - this shouldn't happen`
+        `âŒ API route ${req.path} reached catch-all - this shouldn't happen`
       );
       return res.status(404).json({ error: "API route not found" });
     }
@@ -93,12 +93,12 @@ const startApolloServer = async () => {
     // Serve the React app for all other routes (including root "/")
     const indexPath = path.join(clientBuildPath, "index.html");
     console.log(
-      `🌐 Serving React app for route: ${req.path}, file: ${indexPath}`
+      `ðŸŒ Serving React app for route: ${req.path}, file: ${indexPath}`
     );
 
     // Check if file exists before trying to serve it
     if (!fs.existsSync(indexPath)) {
-      console.error(`❌ index.html not found at: ${indexPath}`);
+      console.error(`âŒ index.html not found at: ${indexPath}`);
       return res
         .status(500)
         .send(
@@ -108,20 +108,20 @@ const startApolloServer = async () => {
 
     res.sendFile(indexPath, (err) => {
       if (err) {
-        console.error(`❌ Error serving index.html:`, err);
+        console.error(`âŒ Error serving index.html:`, err);
         res.status(500).send("Error loading application");
       } else {
-        console.log(`✅ Successfully served index.html for route: ${req.path}`);
+        console.log(`âœ… Successfully served index.html for route: ${req.path}`);
       }
     });
   });
 
   // Start the server AFTER setting up ALL routes
   app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-    console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`📡 GraphQL playground: http://localhost:${PORT}/graphql`);
-    console.log(`📁 Client build path: ${clientBuildPath}`);
+    console.log(`ðŸš€ Server is running on port ${PORT}`);
+    console.log(`ðŸ“Š Health check: http://localhost:${PORT}/api/health`);
+    console.log(`ðŸ“¡ GraphQL playground: http://localhost:${PORT}/graphql`);
+    console.log(`ðŸ“ Client build path: ${clientBuildPath}`);
   });
 };
 

@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteRating = exports.updateRating = exports.addRating = void 0;
-const Business_1 = __importDefault(require("../../../models/Business"));
+const Business_js_1 = __importDefault(require("../../../models/Business.js"));
 const addRating = async (_, { businessId, userId, rating, comment, }) => {
     try {
         if (rating < 1 || rating > 5) {
             throw new Error("Rating must be between 1 and 5");
         }
-        const business = await Business_1.default.findById(businessId);
+        const business = await Business_js_1.default.findById(businessId);
         if (!business) {
             throw new Error("Business not found");
         }
@@ -38,7 +38,7 @@ const updateRating = async (_, { businessId, userId, rating, comment, }) => {
         if (rating < 1 || rating > 5) {
             throw new Error("Rating must be between 1 and 5");
         }
-        const business = await Business_1.default.findById(businessId);
+        const business = await Business_js_1.default.findById(businessId);
         if (!business) {
             throw new Error("Business not found");
         }
@@ -63,7 +63,7 @@ const updateRating = async (_, { businessId, userId, rating, comment, }) => {
 exports.updateRating = updateRating;
 const deleteRating = async (_, { businessId, userId }) => {
     try {
-        const business = await Business_1.default.findById(businessId);
+        const business = await Business_js_1.default.findById(businessId);
         if (!business) {
             throw new Error("Business not found");
         }

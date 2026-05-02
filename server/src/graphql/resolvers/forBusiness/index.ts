@@ -1,12 +1,12 @@
 // Import all business operations
-import { getBusinesses, getBusiness } from "./queries";
-import { createBusiness } from "./createBusiness";
-import { updateBusiness } from "./updateBusiness";
-import { deleteBusiness } from "./deleteBusiness";
-import { addRating, updateRating, deleteRating } from "./ratingOperations";
-import { addFAQ, updateFAQ, deleteFAQ } from "./faqOperations";
-import { Business } from "./businessTypeResolvers";
-import BusinessModel from "../../../models/Business";
+import { getBusinesses, getBusiness } from "./queries.js";
+import { createBusiness } from "./createBusiness.js";
+import { updateBusiness } from "./updateBusiness.js";
+import { deleteBusiness } from "./deleteBusiness.js";
+import { addRating, updateRating, deleteRating } from "./ratingOperations.js";
+import { addFAQ, updateFAQ, deleteFAQ } from "./faqOperations.js";
+import { Business } from "./businessTypeResolvers.js";
+import BusinessModel from "../../../models/Business.js";
 
 // Export all business resolvers
 export const businessResolvers = {

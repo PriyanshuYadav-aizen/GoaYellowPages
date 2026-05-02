@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import NormalUser from "../../models/NormalUser";
+import NormalUser from "../../models/NormalUser.js";
 
 const normalUserResolvers = {
   Mutation: {

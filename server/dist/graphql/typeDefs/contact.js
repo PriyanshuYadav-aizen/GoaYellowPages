@@ -16,6 +16,8 @@ exports.contactTypeDefs = (0, apollo_server_express_1.gql) `
     email: String!
     phone: String!
     address: String!
+    latitude: Float
+    longitude: Float
     googleMapsUrl: String!
     website: String!
     description: String!
@@ -36,6 +38,8 @@ exports.contactTypeDefs = (0, apollo_server_express_1.gql) `
       email: String!
       phone: String!
       address: String!
+      latitude: Float!
+      longitude: Float!
       googleMapsUrl: String!
       website: String!
       description: String!
@@ -48,6 +52,8 @@ exports.contactTypeDefs = (0, apollo_server_express_1.gql) `
       email: String
       phone: String
       address: String
+      latitude: Float
+      longitude: Float
       googleMapsUrl: String
       website: String
       description: String

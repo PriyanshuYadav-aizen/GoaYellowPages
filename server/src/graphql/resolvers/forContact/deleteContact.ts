@@ -1,4 +1,4 @@
-import Contact from "../../../models/Contact";
+import Contact from "../../../models/Contact.js";
 
 export const deleteContact = async (_: any, { id }: { id: string }) => {
   try {
