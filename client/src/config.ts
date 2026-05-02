@@ -5,5 +5,5 @@
 // In production (`npm run build`), import.meta.env.PROD will be true.
 
 export const API_URL = import.meta.env.PROD
-  ? "https://goa-yellow-pages.onrender.com"
+  ? window.location.origin
   : "http://localhost:5001";

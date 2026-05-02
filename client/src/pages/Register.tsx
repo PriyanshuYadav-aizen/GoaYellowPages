@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 import { authAPI } from "../services/auth";
 
 const Register = () => {
@@ -32,7 +33,7 @@ const Register = () => {
           }
         `;
 
-        const response = await fetch("http://localhost:5001/graphql", {
+        const response = await fetch(`${API_URL}/graphql`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
